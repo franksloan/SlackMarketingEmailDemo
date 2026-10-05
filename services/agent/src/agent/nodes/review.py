@@ -1,5 +1,7 @@
+import re
 from typing import TypedDict
 
+from agent.evals.brand_rules import BANNED_WORDS
 from agent.llm import llm
 from langgraph.types import Command
 from pydantic import BaseModel, Field
@@ -8,6 +10,37 @@ from agent.models.draft import ContentDraft
 from agent.models.plan import CampaignPlan
 from agent.models.review import JUDGE_CRITERIA, ReviewResult
 from agent.tracing import elapsed_ms, save_trace, start_timer
+
+_BANNED_SET = set(BANNED_WORDS)
+
+
+def _apply_replacements(text: str, replacements: dict[str, str]) -> str:
+    """Replace banned words with their synonyms, preserving original capitalisation."""
+    for banned, synonym in replacements.items():
+        def _sub(m: re.Match, s: str = synonym) -> str:  # noqa: E731
+            word = m.group(0)
+            if word[0].isupper():
+                return s[0].upper() + s[1:]
+            return s
+        text = re.sub(r"\b" + re.escape(banned) + r"\b", _sub, text, flags=re.IGNORECASE)
+    return text
+
+
+def _clean_draft(draft: ContentDraft, replacements: dict[str, str]) -> ContentDraft:
+    """Return a new ContentDraft with banned words replaced by their synonyms."""
+    if not replacements:
+        return draft
+    data = draft.model_dump()
+    for field in ("subject_line", "headline", "subheadline", "primary_cta_text",
+                  "secondary_cta_text", "secondary_body", "sign_off"):
+        if data.get(field):
+            data[field] = _apply_replacements(data[field], replacements)
+    data["body_sections"] = [
+        {"heading": _apply_replacements(s["heading"], replacements),
+         "body": _apply_replacements(s["body"], replacements)}
+        for s in data["body_sections"]
+    ]
+    return ContentDraft(**data)
 
 _llm = llm
 
@@ -23,6 +56,17 @@ class _ReviewOutput(BaseModel):
     layout_feedback: str
     issues: list[str]
     suggestions: list[str]
+    # Banned word replacements: if any banned words are found, map each to a specific,
+    # outcome-focused synonym that is NOT itself a banned word.
+    banned_word_replacements: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Map of banned/clichéd word → preferred specific synonym for any banned words found in the draft. "
+            f"Banned words to check for: {', '.join(BANNED_WORDS)}. "
+            "Synonyms must be concrete and outcome-focused (e.g. 'leverage' → 'use', 'innovation' → 'capability', "
+            "'cutting-edge' → 'latest'). The synonym itself must NOT appear in the banned list."
+        ),
+    )
     # Judge criteria scores (1-5 each)
     pain_point_coverage: int = Field(ge=1, le=5, description="How directly and specifically the email addresses this audience's documented pain points. 5=each pain point has a concrete AWS solution, 1=generic cloud benefits with no role-specific concerns")
     brand_voice: int = Field(ge=1, le=5, description="Consistency with AWS brand voice: professional, outcome-focused, specific, customer-obsessed, no jargon. 5=throughout, 1=off-brand agency-speak")
@@ -71,11 +115,18 @@ async def review_node(task: ReviewTask) -> dict:
 
     judge_scores = {criterion: getattr(output, criterion) for criterion in JUDGE_CRITERIA}
 
+    # Validate replacements — drop any where the synonym is itself a banned word
+    safe_replacements = {
+        k: v for k, v in output.banned_word_replacements.items()
+        if v.lower() not in _BANNED_SET
+    }
+    cleaned_draft = _clean_draft(draft, safe_replacements)
+
     result = ReviewResult(
         audience_id=draft.audience_id,
         **{
             k: v for k, v in output.model_dump().items()
-            if k not in ("thinking_and_reasoning", *JUDGE_CRITERIA)
+            if k not in ("thinking_and_reasoning", "banned_word_replacements", *JUDGE_CRITERIA)
         },
         judge_scores=judge_scores,
     )
@@ -83,13 +134,13 @@ async def review_node(task: ReviewTask) -> dict:
         node="review",
         inputs={"audience_id": draft.audience_id, "plan_objective": plan.primary_objective},
         thinking_and_reasoning=output.thinking_and_reasoning,
-        outputs={"review": result},
+        outputs={"review": result, "banned_word_fixes": safe_replacements},
         duration_ms=elapsed_ms(t0),
         label=draft.audience_id,
     )
     # Command(goto="html_generator") — NOT Send — so html_generator receives the full
     # accumulated graph state, which includes selected_image from image_selector.
     return Command(
-        update={"reviews": [result]},
+        update={"reviews": [result], "reviewed_drafts": [cleaned_draft]},
         goto="html_generator",
     )

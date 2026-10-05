@@ -117,6 +117,8 @@ flowchart TD
 
   t_dam["DAM\nDigital Asset Management"]
   t_crm["CRM"]
+
+  t_dam --- t_crm
  end
 
  subgraph OBS["Observability"]
@@ -124,6 +126,13 @@ flowchart TD
 
   o_campaigns[("Campaign State DB")]
   o_traces[("Trace DB")]
+
+  o_campaigns --- o_traces
+ end
+
+ subgraph STORAGE["Draft Storage"]
+  direction TB
+
   o_bucket[("Draft History Bucket")]
  end
 
@@ -150,6 +159,7 @@ flowchart TD
  classDef join fill:#37474f,color:#fff,stroke:#263238
  classDef tool fill:#6a3d9a,color:#fff,stroke:#4a2070
  classDef obs fill:#b26a00,color:#fff,stroke:#7a4900
+ classDef storage fill:#2e7d32,color:#fff,stroke:#1b5e20
 
  class req,req_rev request
  class a_product,a_planning,a_img,a_research agent
@@ -158,7 +168,8 @@ flowchart TD
  class r_drafting_email,r_drafting_web,r_review_email,r_review_web,r_htmlgen,r_htmlcheck agent
  class a_post_review,r_post_review join
  class t_dam,t_crm tool
- class o_campaigns,o_traces,o_bucket obs
+ class o_campaigns,o_traces obs
+ class o_bucket storage
 
  style UX fill:#dce8f7,stroke:#1264A3,color:#000
  style WORKFLOWS fill:#d6eaea,stroke:#0d6e6e,color:#000
@@ -166,4 +177,5 @@ flowchart TD
  style REVISION fill:#c2dcdc,stroke:#09494a,color:#000
  style TOOLS fill:#ede0f7,stroke:#6a3d9a,color:#000
  style OBS fill:#fef3e2,stroke:#b26a00,color:#000
+ style STORAGE fill:#e8f5e9,stroke:#2e7d32,color:#000
 ```

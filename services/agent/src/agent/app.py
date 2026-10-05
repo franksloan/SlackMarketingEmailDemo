@@ -195,7 +195,7 @@ async def process_request(
         reviews_by_audience = {r.audience_id: r for r in result.get("reviews", [])}
         html_paths_by_audience: dict[str, str] = {}
         for path in html_file_paths:
-            audience_id = os.path.basename(path).removeprefix("email_").removesuffix(".html")
+            audience_id = os.path.basename(path).removeprefix("email_").removesuffix(".html").split("--")[0]
             html_paths_by_audience[audience_id] = path
 
         audience_by_id = {a.id: a for a in plan.matched_audiences} if plan else {}

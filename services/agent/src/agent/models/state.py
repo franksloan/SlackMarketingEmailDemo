@@ -18,6 +18,7 @@ class AgentState(TypedDict, total=False):
     drafts: Annotated[list[ContentDraft], operator.add]
     reviews: Annotated[list[ReviewResult], operator.add]
     plan_clarification: str
+    reviewed_drafts: Annotated[list[ContentDraft], operator.add]
     selected_image: dict | None
     image_alternatives: list[dict]
     html_file_paths: Annotated[list[str], operator.add]

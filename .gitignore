@@ -11,5 +11,5 @@ output/
 traces/
 services/agent/campaign_states
 services/eval_results
-services/generated_emails
+services/agent/generated_emails/
 .idea/

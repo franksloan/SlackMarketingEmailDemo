@@ -73,6 +73,27 @@ def render(draft: "ContentDraft", banner_image_b64: str | None = None, banner_im
     </td>
     </tr>
 
+    <!-- MODULE: Secondary body -->
+    <tr>
+    <td>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-spacing:0; mso-table-lspace:0pt; mso-table-rspace:0pt; margin:0 auto; width:100%;" border="0" align="center">
+      <tbody><tr>
+      <td class="lightMode" style="background-color:#ffffff;" bgcolor="#ffffff">
+        <table class="deviceWidth1" width="600" cellpadding="0" cellspacing="0"
+          style="border-spacing:0; mso-table-lspace:0pt; mso-table-rspace:0pt; margin:0 auto; width:600px;" border="0" align="center">
+        <tbody>
+        <tr>
+          <td class="dark" valign="top"
+            style="font-family:AmazonEmber,arial,Helvetica,sans-serif; font-size:16px; line-height:24px; font-weight:normal; color:#232B37; text-align:left; mso-line-height-rule:exactly; padding:0 20px;">
+            <div style="margin-top:0; margin-bottom:16px;">{draft.secondary_body}</div>
+          </td>
+        </tr>
+        </tbody></table>
+      </td>
+      </tr></tbody></table>
+    </td>
+    </tr>
+
     <!-- MODULE: Secondary CTA -->
     <tr>
     <td>

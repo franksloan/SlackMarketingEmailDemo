@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 from pathlib import Path
 
 from agent.generate_email import render
@@ -10,7 +11,8 @@ _HTML_OUTPUT_DIR = Path(__file__).parents[3] / "generated_emails"
 
 def html_generator_node(state: AgentState) -> Command:
     """Renders a single ContentDraft to HTML and chains to html_check."""
-    drafts = state.get("drafts", [])
+    # Prefer reviewed_drafts (banned words already replaced) over raw drafts
+    drafts = state.get("reviewed_drafts") or state.get("drafts", [])
     selected_image = state.get("selected_image")
     _HTML_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -25,10 +27,11 @@ def html_generator_node(state: AgentState) -> Command:
         except OSError:
             pass
 
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_paths: list[str] = []
     for draft in drafts:
         html = render(draft, banner_image_b64=banner_image_b64, banner_image_filename=banner_image_filename)
-        path = _HTML_OUTPUT_DIR / f"email_{draft.audience_id}.html"
+        path = _HTML_OUTPUT_DIR / f"email_{draft.audience_id}--{timestamp}.html"
         path.write_text(html, encoding="utf-8")
         file_paths.append(str(path))
 

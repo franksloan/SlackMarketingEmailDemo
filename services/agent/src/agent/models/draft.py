@@ -18,4 +18,8 @@ class ContentDraft(BaseModel):
     primary_cta_url: str
     secondary_cta_text: str | None = None
     secondary_cta_url: str | None = None
+    secondary_body: str | None = Field(
+        default=None,
+        description="1-2 sentence intro to the secondary CTA — should explain what the reader will find at the link (e.g. customer stories, a demo, a guide) and why it's relevant to them"
+    )
     sign_off: str | None = None

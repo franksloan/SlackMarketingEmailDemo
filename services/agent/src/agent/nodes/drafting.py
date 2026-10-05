@@ -4,11 +4,14 @@ from agent.llm import llm
 from langgraph.types import Command, Send
 from pydantic import Field
 
+from agent.evals.brand_rules import BANNED_WORDS, SUBJECT_LINE_MAX_CHARS
 from agent.models.audience import AudienceProfile
 from agent.models.draft import ContentDraft
 from agent.models.plan import CampaignPlan
 from agent.models.research import ResearchFindings
 from agent.tracing import elapsed_ms, save_trace, start_timer
+
+_BANNED_WORDS_STR = ", ".join(BANNED_WORDS)
 
 _llm = llm
 
@@ -56,6 +59,16 @@ async def drafting_node(task: DraftTask) -> dict:
         f"Technical audiences (CTOs, engineers) respond to architecture, performance, and control. "
         f"Business audiences (CPOs, CROs) respond to outcomes, speed, and competitive advantage. "
         f"Let this shape your word choices, section structure, and CTA framing.\n\n"
+        f"AWS brand guardrails — you MUST follow these:\n"
+        f"1. Subject line must be {SUBJECT_LINE_MAX_CHARS} characters or fewer (count carefully).\n"
+        f"   Subheadline must be 80 characters or fewer — keep it punchy, not a full sentence.\n"
+        f"2. Never use these vague or clichéd words anywhere in the copy: {_BANNED_WORDS_STR}.\n"
+        f"   Replace them with specific, outcome-focused language — name the actual capability, metric, or result.\n"
+        f"3. Customer-first voice: use 'you/your' far more often than 'we/our/us'. "
+        f"   The email should read as if it is about the customer's world, not AWS's.\n"
+        f"4. secondary_body must be 1-2 sentences that set up what the reader will find at the secondary CTA link "
+        f"   (e.g. customer stories, a demo, a guide). It should explain the value waiting for them — "
+        f"   not repeat the headline or body copy. Keep it under 40 words.\n\n"
         f"Set audience_id='{audience.id}'."
     )
 

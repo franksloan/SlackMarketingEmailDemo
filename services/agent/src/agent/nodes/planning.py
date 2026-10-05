@@ -112,7 +112,13 @@ async def planning_node(state: AgentState) -> dict:
         f"Select the appropriate audience IDs from that candidate list (max 4). "
         f"Use the full profiles above to reason about which genuinely fit the brief. "
         f"Then produce a campaign plan covering objective, tone, content format, "
-        f"suggested sections, and success criteria."
+        f"suggested sections, and success criteria.\n\n"
+        f"For suggested_sections: write 3-5 outcome-oriented headings specific to this product and audience. "
+        f"Each heading should read like a benefit or insight the reader will get from that section — "
+        f"not a generic topic label. "
+        f"Good: 'Deploy without touching your pipeline', 'How teams like yours cut release cycles by half'. "
+        f"Bad: 'Why AWS', 'Key Benefits', 'Get Started'. "
+        f"Use the audience pain points and AWS offering above to ground each heading."
     )
 
     # Revision: append previous reasoning + marketer feedback so the plan adapts

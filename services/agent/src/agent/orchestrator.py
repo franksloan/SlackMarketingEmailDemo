@@ -77,8 +77,8 @@ _builder.add_conditional_edges("planning", _route_planning, ["image_selector", "
 # image_selector ends here — result is stored in accumulated state for html_generator to read
 _builder.add_edge("image_selector", END)
 
-# per-audience chain ends: review routes to html_generator via Command (see review_node)
-_builder.add_edge("html_generator", "html_check")
+# per-audience chain: review → html_generator via Command (review_node), then
+# html_generator → html_check via Send (html_generator_node) — no static edge needed here
 _builder.add_edge("html_check", END)
 
 graph = _builder.compile()
@@ -134,7 +134,7 @@ _rev_builder.add_conditional_edges("revision_planner", _route_revision, ["editor
 _rev_builder.add_edge("editor", "html_generator")
 
 # regenerate path: review → html_generator via Command (see review_node)
-_rev_builder.add_edge("html_generator", "html_check")
+# html_generator → html_check via Send (html_generator_node) — no static edge needed here
 _rev_builder.add_edge("html_check", END)
 
 revision_graph = _rev_builder.compile()
