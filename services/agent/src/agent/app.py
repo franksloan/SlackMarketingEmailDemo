@@ -423,10 +423,6 @@ async def process_revision(
 # Routes
 # ---------------------------------------------------------------------------
 
-@app.get("/")
-async def health() -> dict:
-    return {"status": "ok"}
-
 
 
 

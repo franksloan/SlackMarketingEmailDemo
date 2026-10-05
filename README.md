@@ -15,7 +15,7 @@ TAVILY_API_KEY=...
 
 ## Getting Started
 
-Note that this can't be connected to slack when running locally without use of ngrok.
+Note - I have used ngrok to give slack access to locally running app.
 
 ```bash
 cd services/agent
@@ -32,6 +32,21 @@ The agent service is a FastAPI app that:
 3. Runs an AI agent to generate or refine marketing email content
 4. Posts the result back to the originating Slack channel
 
+### Agent pipeline
+
+Each request runs through a multi-stage LangGraph pipeline:
+
+1. **Product lookup** — identifies the AWS product from the brief
+2. **Planning** — matches the brief to one or more audience segments (e.g. CTO, CPO, VP Engineering) and produces a campaign plan
+3. **Research** — gathers insights and talking points per audience (runs in parallel)
+4. **Drafting** — writes subject line, headline, body sections, and CTAs tailored to each audience
+5. **Review** — scores the draft against brand and quality criteria; replaces any banned words
+6. **HTML generation** — renders each draft to a standalone HTML email file (`services/agent/generated_emails/`)
+
+### Approval and revision workflow
+
+Each generated draft is posted to Slack with Approve / Reject buttons. Rejecting opens a feedback modal; the agent uses that feedback to revise the draft and re-posts it in the same thread.
+
 ## Services
 
 ### agent (FastAPI) — `services/agent`
@@ -40,7 +55,7 @@ Handles the Slack webhook and AI agent orchestration.
 
 **Endpoints:**
 - `POST /slack/events` — Slack Events API handler
-- `POST /slack/commands` — Slack slash command handler
+- `POST /slack/actions` — handles Slack interactive components (approve/reject buttons, feedback modal)
 
 ## Slack examples
 
