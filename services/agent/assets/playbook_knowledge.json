@@ -1,0 +1,98 @@
+{
+  "audiences": [
+    {
+      "id": "cpo_pm",
+      "title": "Chief Product Officers / Product Managers",
+      "description": "Driving product-led growth, controlling costs while modernising the portfolio.",
+      "pain_points": [
+        "Must bring new products to market quickly to generate revenue.",
+        "Need a strategy for reinventing their portfolio to modernise more of it.",
+        "Under pressure from enterprise-wide software transformation.",
+        "Need transparency and control over their roadmap."
+      ],
+      "what_aws_offers": "AWS guides on pressures of enterprise-wide transformation, provides transparency and control, and gives tools to modernise the product roadmap quickly to generate revenue.",
+      "messaging": {
+        "primary_headline": "A faster path to the cloud",
+        "secondary_headline": "Modernize your product roadmap",
+        "body_themes": [
+          "Modernise your product roadmap.",
+          "Bring new products to market faster.",
+          "Control costs while transforming.",
+          "Generate revenue through cloud adoption."
+        ]
+      }
+    },
+    {
+      "id": "cro_bd",
+      "title": "Chief Revenue Officers / Business Development / Alliance Managers",
+      "description": "Modernising the business model, staying ahead of competition, embracing new technology to drive commercial returns.",
+      "pain_points": [
+        "Must modernise business model to stay ahead of competition.",
+        "Responding to new customer demands and translating them into commercial returns.",
+        "Need to grow revenue and build on existing platforms.",
+        "Need greater visibility and control over product lifecycle and monetisation."
+      ],
+      "what_aws_offers": "AWS APIs proactively support driving revenue growth. AWS helps lifecycle and monetise new upgrades and features while simplifying and giving customers greater visibility and control over costs.",
+      "messaging": {
+        "primary_headline": "Modernize to drive revenue",
+        "secondary_headline": "The key to growth is the cloud",
+        "body_themes": [
+          "Grow revenue by building on the cloud.",
+          "Monetise new features and upgrades faster.",
+          "Simplify your product stack.",
+          "Gain greater visibility and commercial control."
+        ]
+      }
+    },
+    {
+      "id": "cto",
+      "title": "Chief Technology Officers",
+      "description": "Seeking competitive edge by modernising the business model and embracing the best in new technology.",
+      "pain_points": [
+        "Identifying the right cloud tools to drive innovation at the right price.",
+        "Maximising value of existing infrastructure stack.",
+        "Assessing current strategy and identifying opportunities for improvement.",
+        "Attracting and retaining top development talent."
+      ],
+      "what_aws_offers": "AWS gives the choice and control to assess current strategy and infrastructure stack, identify opportunities for improvement, and build SaaS success at speed. AWS provides technical resources to attract and retain the best development talent.",
+      "messaging": {
+        "primary_headline": "Achieve SaaS success at scale",
+        "secondary_headline": "Get an edge with best-in-class tech",
+        "body_themes": [
+          "Modernise your business model with confidence.",
+          "Best-in-class cloud tools for competitive advantage.",
+          "Agile and secure building blocks for SaaS.",
+          "Attract and retain world-class engineering talent."
+        ]
+      }
+    },
+    {
+      "id": "eng_lead_sa",
+      "title": "Engineering Leads / Solutions Architects",
+      "description": "Building the most innovative products to market with speed and efficiency.",
+      "pain_points": [
+        "Engineering and solution teams need to get building fast, with speed and efficiency.",
+        "Need the most innovative products to market.",
+        "Require an open, flexible, and secure environment."
+      ],
+      "what_aws_offers": "AWS for Software and Technology is architected to provide an open, flexible, and secure environment. AWS offers a building-block approach to SaaS and the best tools and latest technology to build best-in-class cloud products.",
+      "messaging": {
+        "primary_headline": "Empower your team for growth",
+        "secondary_headline": "Deploy tools for SaaS development",
+        "body_themes": [
+          "Open, flexible, secure cloud environment.",
+          "Building-block approach to SaaS development.",
+          "Speed and efficiency from day one.",
+          "Best-in-class tools for engineering teams."
+        ]
+      }
+    }
+  ],
+
+  "audience_detection_hints": {
+    "cpo_pm":      ["product", "roadmap", "product manager", "CPO", "product-led", "portfolio", "modernize product"],
+    "cro_bd":      ["revenue", "CRO", "business development", "alliance", "commercial", "monetize", "growth", "BD"],
+    "cto":         ["CTO", "technology officer", "infrastructure", "SaaS", "technical strategy", "cloud tools", "tech stack"],
+    "eng_lead_sa": ["engineer", "architect", "solutions architect", "engineering lead", "development", "build", "deploy", "SaaS development"]
+  }
+}

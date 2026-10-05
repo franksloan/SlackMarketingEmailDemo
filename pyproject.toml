@@ -1,0 +1,10 @@
+[tool.uv.workspace]
+members = [
+    "services/agent",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.basedpyright]
+include = ["services/**"]

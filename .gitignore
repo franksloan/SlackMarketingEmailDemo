@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+.env
+node_modules/
+.DS_Store
+uv.lock
+output/
+traces/
+services/agent/campaign_states
+services/eval_results
+services/generated_emails
+.idea/
